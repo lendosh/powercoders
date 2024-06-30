@@ -1,10 +1,11 @@
 import * as React from 'react';
 
+//TODO: add i18n
 const Footer = () => {
     return (
-        <div>
+        <footer className='pb-8'>
 
-        </div>
+        </footer>
     );
 };
 

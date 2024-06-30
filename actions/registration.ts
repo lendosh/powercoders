@@ -1,14 +1,34 @@
 'use server'
 
 import * as z from 'zod';
-import {LoginSchema} from "@/schemas";
+import bcrypt from "bcryptjs";
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
-  const validatedFields = LoginSchema.safeParse(values);
+import {db} from '@/lib/db';
+import {RegistrationSchema} from "@/schemas";
+import {getUserByEmail} from "@/data/user";
 
-  if (!validatedFields.success) {
-    return { error: 'Invalid fields or account did not exists.' };
-  }
+export const registration = async (values: z.infer<typeof RegistrationSchema>) => {
+    const validatedFields = RegistrationSchema.safeParse(values);
 
-  return { success: 'Successfully login!' };
+    if (!validatedFields.success) {
+        return {error: 'Invalid fields or account did not exists.'};
+    }
+
+    const {email, password, name} = validatedFields.data;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const existingUser = await getUserByEmail(email);
+
+    if (existingUser) {
+        return {error: 'Email already in use!'};
+    }
+
+    await db.user.create({
+        data: {
+            name,
+            email,
+            password: hashedPassword
+        }
+    });
+
+    return {success: 'User created!'};
 };

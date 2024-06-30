@@ -11,11 +11,7 @@ const sections = [
     },
     {
         title: 'Github',
-        href: '#'
-    },
-    {
-        title: 'Memes',
-        href: '/memes'
+        href: 'https://github.com/lendosh'
     },
     {
         title: 'Contacts',
@@ -25,17 +21,18 @@ const sections = [
 
 const Header = () => {
     return (
-        <div className='flex justify-center justify-items-center border-b border-b-black w-full'>
+        <header className='mx-auto flex max-w-7xl items-center justify-center px-2 lg:px-8'>
             {sections.map((section, index) =>
                 <a
                     key={index}
                     href={section.href}
-                    className='py-8 px-6 hover:cursor-pointer'
+                    target={section.href.includes('https') ? '_blank' : undefined}
+                    className='py-8 px-3 lg:px-6'
                 >
                     {section.title}
                 </a>
             )}
-        </div>
+        </header>
     );
 };
 
